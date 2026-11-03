@@ -1,9 +1,8 @@
-// KillC for Horizon, the module crate::game::killc and the Cargo library for cargo test.
+// the module crate::game::killc and the cargo library for cargo test
 use std::cell::RefCell;
 use std::collections::HashSet;
 use std::path::Path;
-
-// Vanilla's world border limit.
+// vanillas world border limit.
 const MAX_RADIUS: u64 = 29_999_983;
 const DEFAULTS: &str = "{\n  \"enabled\": true,\n  \"useRandomSpawn\": true,\n  \"randomSpawnRadius\": 200\n}\n";
 
@@ -14,7 +13,7 @@ pub struct Config {
     pub radius: u64,
 }
 
-/// config/killc.json with the Fabric keys, missing or broken keys keep their defaults.
+/// config/killc.json with the "fabric" keys
 pub fn parse(text: &str) -> Config {
     let v: serde_json::Value = serde_json::from_str(text).unwrap_or_default();
     Config {
@@ -26,13 +25,12 @@ pub fn parse(text: &str) -> Config {
 
 thread_local! {
     static CONFIG: RefCell<Config> = RefCell::new(parse(DEFAULTS));
-    // Console lines for the next server tick: a player's hook can't run them.
+    // console lines for the next server tick
     static QUEUE: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
-    // Players who died, respawned at random once they are alive again.
+    // players who died respawned at random
     static DEAD: RefCell<HashSet<u128>> = RefCell::new(HashSet::new());
 }
 
-/// A world opens: read the config, writing the defaults when it is missing.
 pub fn start(dir: Option<&Path>) -> Config {
     let text = dir.and_then(|d| {
         let path = d.join("killc.json");
@@ -52,7 +50,7 @@ pub fn config() -> Config {
     CONFIG.with(|c| c.borrow().clone())
 }
 
-/// None when not ours, Ok(answer) to kill yourself, Err(name) to kill another player.
+/// none when not ours, Ok(answer) to kill yourself, Err(name) to kill another player
 pub fn parse_command(line: &str) -> Option<Result<&'static str, &str>> {
     let mut words = line.split_whitespace();
     let word = words.next()?;
@@ -77,7 +75,7 @@ pub fn died(uuid: u128) {
     DEAD.with(|d| d.borrow_mut().insert(uuid));
 }
 
-/// Whether `uuid` died and this is the first time they are seen alive again.
+/// whether uuid died and this is the first time they are seen alive again
 pub fn respawned(uuid: u128) -> bool {
     DEAD.with(|d| d.borrow_mut().remove(&uuid))
 }

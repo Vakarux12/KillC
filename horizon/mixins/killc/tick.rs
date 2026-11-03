@@ -1,4 +1,4 @@
-// End of each server tick: queued kills, then random respawns in the Overworld.
+// end of each server tick
 fn killc_tick(
     game: &mut crate::game::Game<'_>,
     phase: crate::game::native_lifecycle::ServerTickPhase,
@@ -15,9 +15,9 @@ fn killc_tick(
         return;
     }
     for p in game.native_server_players() {
-        // Beds are not told apart from the world spawn, as in the Fabric build.
+        // Beds are not told apart from the world spawn
         if p.health > 0.0 && m::respawned(p.uuid) && p.dimension == "minecraft:overworld" {
-            // spreadplayers finds the surface and loads the chunk.
+            // spreadplayers finds the surface and loads the chunk
             game.native_run_command(&format!("spreadplayers 0 0 0 {} false {}", config.radius, p.name));
         }
     }

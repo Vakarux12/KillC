@@ -1,4 +1,4 @@
-// /suicide and /killc [player], the kill runs at the next server tick.
+// /suicide and /killc kill runs at the next server tick.
 fn killc_command(
     game: &mut crate::game::Game<'_>,
     player: &crate::game::native_server::NativeServerPlayer,
@@ -19,7 +19,7 @@ fn killc_command(
             m::queue(format!("kill {}", player.name));
             game.native_feedback(Text::literal(answer));
         }
-        // The server only checks the lowest usage's level, so check level 2 here.
+        // server only checks lowest usage level so check level 2 here
         Err(_) if player.permission < 2 => {
             game.native_feedback(Text::literal("You don't have permission to kill other players.").with_color(text::RED));
         }
