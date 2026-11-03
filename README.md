@@ -75,3 +75,17 @@ secret, so a modded client cannot forge one.
 - **Java**: 25+
 This was made by human
 Made with love 🧡
+
+## Horizon
+
+`horizon/` is a native mod for [Horizon](https://playhorizon.dev/docs/make-a-mod) (26.3), server side:
+it runs where the world is hosted (single player and LAN hosts, as Horizon's dedicated server can't build
+native mods yet).
+
+- `/killc`, `/suicide` - kill yourself.
+- `/killc <player>` - kill a player (operator level 2).
+- Random respawn within `randomSpawnRadius` of (0, 0) after a death in the Overworld, through `/spreadplayers`.
+
+Config: `config/killc.json`, the same keys as Fabric. Build and test from a clone of
+`horizon-rust/horizon-mods`: `python3 native/tools/native.py check /path/to/KillC/horizon`, unit tests with
+`cargo test` in `horizon/`.
